@@ -1,0 +1,72 @@
+from tkinter import *
+from tkinter import ttk
+import sqlite3
+import Admin
+import Setup
+
+class LoginPage:
+    def __init__(self, master):
+        self.master = master
+        self.master.grid_rowconfigure(0, weight=1)
+        self.master.grid_columnconfigure(0, weight=1)
+        
+        self.frame = Frame(self.master)
+
+        self.myLabel1 = Label(self.frame, text='USERNAME')
+        self.UserIn = Entry(self.frame)
+        self.myLabel2 = Label(self.frame, text='PASSWORD')
+        self.PassIn = Entry(self.frame)
+        self.btn = Button(self.frame, text="Log in", command=self.LogIn)
+        
+        self.myLabel1.grid(row=1,column=1)
+        self.UserIn.grid(row=2,column=1)
+        self.myLabel2.grid(row=3,column=1)
+        self.PassIn.grid(row=4,column=1)
+        self.btn.grid(row=5,column=1)
+
+        tableau = ttk.Treeview(self.frame, columns=('nomfamille', 'prenom', 'da'))
+
+        tableau.heading('nomfamille', text='Nom de famille')
+
+        tableau.heading('prenom', text='Prénom')
+
+        tableau.heading('da', text='DA')
+
+        tableau['show'] = 'headings' # sans ceci, il y avait une colonne vide à gauche qui a pour rôle d'afficher le paramètre "text" qui peut être spécifié lors du insert
+
+
+
+
+        tableau.grid(row=6,column=1,sticky="nsew")
+
+        self.frame.pack()
+
+
+    def LogIn(self):
+        conn = Setup.connexion()
+        c = conn.cursor()
+        u = self.UserIn.get()
+        p = self.PassIn.get()
+
+        val = (u, p,)
+        
+        c.execute("select count(*) from admin where email_a=? and password_a=?", val)
+        logAdmin = c.fetchone()[0]
+        c.execute("select count(*) from demandeur where email_d=? and password_d=?", val)
+        logDemandeur = c.fetchone()[0]
+        
+        if (logAdmin == 1):
+            self.frame.destroy()
+            admin = Frame(self.master)
+            Admin.Admin(admin)
+
+
+        elif (logDemandeur == 1):
+            demandeur = Toplevel()
+            msg = Label(demandeur, text="Hey User")
+            msg.pack()
+        
+        
+        else:
+            msg = Label(self.frame, text="Unknown user")
+            msg.pack()
