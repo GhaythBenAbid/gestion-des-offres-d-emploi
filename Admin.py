@@ -6,16 +6,11 @@ import Setup
 
 class Admin:
     
-
-
-    
-
-
-
-
     #Admin Panel (UI)
-    def __init__(self,master):
+    def __init__(self,master , adminId):
         self.master = master
+
+        self.adminId = adminId
 
         
         
@@ -47,7 +42,11 @@ class Admin:
         self.adrSociete = Setup.CreationLabel("Adresse Societe :",2,0,self.MenuAdmin)
         self.numSociete = Setup.CreationLabel("Num Societe :",3,0,self.MenuAdmin)
         self.emailSociete = Setup.CreationLabel("Email Societe :",4,0,self.MenuAdmin)
-        self.ajouteroffre = Setup.CreationButton("Ajouter cette offre",5,0,self.Ajouter,self.MenuAdmin)
+        self.diplome = Setup.CreationLabel("Diplome :",5,0,self.MenuAdmin)
+        self.qualification = Setup.CreationLabel("Qualification :",6,0,self.MenuAdmin)
+        self.experience = Setup.CreationLabel("Experience :",7,0,self.MenuAdmin)
+        self.description = Setup.CreationLabel("Description :",8,0,self.MenuAdmin)
+        self.ajouteroffre = Setup.CreationButton("Ajouter cette offre",9,0,self.Ajouter,self.MenuAdmin)
 
         self.MenuAdmin.pack()
 
@@ -57,8 +56,8 @@ class Admin:
     def Ajouter(self):
         conn = Setup.connexion()
         c = conn.cursor()
-        val = (self.nomSociete.get(), self.adrSociete.get(), self.numSociete.get() , self.emailSociete.get(),)
-        c.execute("insert into offre values(null,?,?,?,?,1)",val)
+        val = (self.nomSociete.get(), self.adrSociete.get(), self.numSociete.get() , self.emailSociete.get(),self.adminId,self.diplome.get(),self.qualification.get(),self.experience.get(),self.description.get())
+        c.execute("insert into offre values(null,?,?,?,?,?,?,?,?,?)",val)
         conn.commit()
 
 
@@ -101,6 +100,7 @@ class Admin:
             
         else:
             self.MessageErreur = Setup.Message("id non trouvé",3,0,self.MenuAdmin)
+
 
     #Method du button Modifier
         #Modifier les donneés et envoyer a la base de donneés
@@ -153,8 +153,5 @@ class Admin:
         val = (self.jobid.get() ,)
         c.execute(sql,val)
         conn.commit()
-
-
-        
         messagebox.showinfo("tk", "suppression effectué avec success") 
         
