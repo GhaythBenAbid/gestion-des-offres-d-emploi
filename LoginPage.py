@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk
 import sqlite3
 import Admin
+import Demandeur
 import Setup
 
 class LoginPage:
@@ -18,7 +19,7 @@ class LoginPage:
         self.UserIn = Entry(self.frame)
         self.myLabel2 = Label(self.frame, text='PASSWORD')
         self.PassIn = Entry(self.frame)
-        self.btn = Button(self.frame, text="Log in", command=self.LogIn)
+        self.btn = Button(self.frame, text="Log in" , command=self.LogIn)
         
         #positioning the labels and the entrys
         self.myLabel1.grid(row=1,column=1)
@@ -46,21 +47,20 @@ class LoginPage:
         
         #exectue the query from admin table
         c.execute("select id_a from admin where email_a=? and password_a=?", val)
-        logAdmin = c.fetchone()[0]
+        logAdmin = c.fetchone()
 
         #exectue the query from demendeur table
         c.execute("select count(*) from demandeur where email_d=? and password_d=?", val)
-        logDemandeur = c.fetchone()[0]
+        logDemandeur = c.fetchone()
         
         #check if which user has entred his informations
         if (logAdmin is not None):
             self.frame.destroy()
             admin = Frame(self.master)
             Admin.Admin(admin , logAdmin)
-        elif (logDemandeur == 1):
-            demandeur = Toplevel()
-            msg = Label(demandeur, text="Hey User")
-            msg.pack()
-        else:
-            msg = Label(self.frame, text="Unknown user")
-            msg.pack()
+
+        elif(logDemandeur is not None):
+            self.frame.destroy()
+            demandeur = Frame(self.master)
+            Demandeur.Demandeur(demandeur , logDemandeur)
+            

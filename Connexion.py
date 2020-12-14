@@ -41,22 +41,35 @@ c.execute("" CREATE TABLE offre(
 
 conn.commit()
 
-
-"""
-c = conn.cursor()
-
-c.execute(""" CREATE TABLE postuler(
+c.execute("" CREATE TABLE postuler(
     id_demendeur integer,
     id_offre integer,
     primary key(id_demendeur , id_offre)
 )
 
 
+"")
 
 
+"""
+c = conn.cursor()
+
+
+
+c.execute(""" CREATE TABLE postuler(
+    id_demandeur integer,
+    id_offre integer,
+    cin integer,
+    Nom text,
+    adresse text,
+    numtel text,
+    education text,
+    experience text,
+    Foreign key (id_demandeur) REFERENCES demandeur(id_d),
+    Foreign key (id_offre) REFERENCES offre(job_id),
+    primary key(id_demandeur , id_offre)
+)
 """)
-
-
 
 conn.commit()
 
